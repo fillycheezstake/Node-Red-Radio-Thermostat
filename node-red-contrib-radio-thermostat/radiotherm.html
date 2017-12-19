@@ -1,0 +1,138 @@
+//the node help/about
+<script type="text/x-red" data-help-name="radio-thermostat">
+    <p>Fetches data from a Radio Thermostat thermostat.</p>
+    <p>The <code>msg.payload</code> contains thermostat data in json.
+</script>
+
+//The node form
+<script type="text/x-red" data-template-name="radio-thermostat">
+    
+    <div class="form-row">
+        <label for="node-input-IPAddr"><i class="fa fa-tag"></i> Thermostat IP address</label>
+        <input type="text" id="node-input-IPAddr" placeholder="">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Thermostat">
+    </div>
+</script>
+
+
+//the node define
+<script type="text/javascript">
+    RED.nodes.registerType('radio-thermostat',{
+        category: 'Radio_Thermostat',
+        color:"rgb(91, 192, 222)",
+        defaults: {
+            name: {value:"Thermostat"},
+			IPAddr: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "bridge.png",
+        align: "left",
+        label: function() {
+            return this.name||"RadioTherm";
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>
+
+
+
+//The node form
+<script type="text/x-red" data-template-name="radio-thermostat in">
+    
+	<div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Thermostat">
+    </div>    
+
+    <div class="form-row">
+        <label for="node-input-IPAddr"><i class="fa fa-globe"></i> Address</label>
+        <input type="text" id="node-input-IPAddr" placeholder="">
+    </div>
+	
+	<div class="form-row">
+        <label for="node-input-fanState"><i class="fa fa-cog fa-spin"></i> Fan Setting</label>
+		<select type="text" id="node-input-fanState">
+		  <option value="0">Auto</option>
+		  <option value="1">Auto/Circulate</option>
+		  <option value="2">On</option>
+		</select>
+		
+    </div>
+	
+	<div class="form-row">
+        <label for="node-input-tmode"><i class="fa fa-dashboard"></i> Mode</label>
+		<select type="text" id="node-input-tmode">
+		  <option value="0">Off</option>
+		  <option value="1">Heat</option>
+		  <option value="2">Cool</option>
+		  <option value="3">Auto</option>
+		</select>
+    </div>
+
+	<div class="form-row" id="setpoint-div">
+        <label for="node-input-setpoint"><i class="fa fa-sliders"></i> Setpoint</label>
+        <input type="text" id="node-input-setpoint" placeholder="">
+    </div>
+
+</script>
+
+
+//the node define
+<script type="text/javascript">
+    RED.nodes.registerType('radio-thermostat in',{
+        category: 'Radio_Thermostat',
+        color:"rgb(91, 192, 222)",
+        defaults: {
+            name: {value:"Set Thermostat", required:true},
+            IPAddr: {value:"", required:true},
+			fanState:{value:"0", required:true},
+			tmode:{value:"0", required:true},
+			setpoint: {value:"", validate:function(v) { return (((v >= 50) && (v <= 90)) || (v == 0));} },
+			
+        },
+        inputs:1,
+        outputs:0,
+        icon: "arrow-in.png",
+        align: "left",
+        
+        
+		oneditprepare: function() {
+            $("#node-input-tmode").change(function() {
+                var id = $("#node-input-tmode option:selected").val();
+				if (id == 0) {
+					$("#setpoint-div").hide();
+				}
+				else {
+					$("#setpoint-div").show();		
+				}
+            });
+            
+			var id = $("#node-input-tmode option:selected").val();
+            if (id == 0) {
+				$("#setpoint-div").hide();			
+			}
+
+        },
+
+		oneditsave: function() {
+            var type = $("#node-input-tmode option:selected").val();
+            if(type == 0){
+                $("#node-input-setpoint").val("0");
+            }
+        },
+		
+			
+		label: function() {
+            return this.name||"RadioTherm";
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>

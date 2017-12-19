@@ -1,0 +1,14 @@
+{
+    "name": "node-red-contrib-radio-thermostat",
+    "version": "0.0.1",
+    "description": "A Radio Thermostat node for node-red",
+    "dependencies": {},
+    "keywords": [
+        "node-red"
+    ],
+    "node-red": {
+        "nodes": {
+            "radiotherm": "radiotherm.js"
+        }
+    }
+}
